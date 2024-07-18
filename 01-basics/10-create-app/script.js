@@ -8,7 +8,7 @@ const DateLocal = defineComponent({
   name: 'DateLocal',
   setup () {
     function formatAsLocalDate() {
-      return new Date().toLocaleDateString('ru-RU', options)
+      return new Date().toLocaleDateString('en-EU', options)
     }
     return {
       formatAsLocalDate,

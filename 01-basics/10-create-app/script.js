@@ -8,13 +8,13 @@ const DateLocal = defineComponent({
   name: 'DateLocal',
   setup () {
     function formatAsLocalDate() {
-      return new Date().toLocaleDateString('en-EU', options)
+      return new Date().toLocaleDateString(navigator.language, options)
     }
     return {
-      formatAsLocalDate,
+      data: formatAsLocalDate(),
     }
   },
-  template:  '<div>Сегодня {{ formatAsLocalDate() }}</div>'
+  template:  '<div>Сегодня {{ data }} </div>'
 })
 
 createApp(DateLocal)

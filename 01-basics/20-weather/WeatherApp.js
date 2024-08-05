@@ -5,17 +5,27 @@ import { getWeatherData, WeatherConditionIcons } from './weather.service.ts'
 export default defineComponent({
   name: 'WeatherApp',
 
+  setup(){
+    function  getIcons() {
+      return WeatherConditionIcons
+    }
+    return {
+      icons: getIcons()
+    }
+  },
+
   data() {
     return {
       weathers: getWeatherData(),
-      icons: [],
     }
   },
   methods: {
-    tempInfo(){
-      this.weathers ;
-      this.icons = WeatherConditionIcons;
-    },
+    sunriseOrSunset(weather){
+      return (((Number(weather.current.dt.substring(0,2)) * 60 +
+          Number(weather.current.dt.substring(3,5))) > (Number(weather.current.sunset.substring(0,2)) * 60 + Number(weather.current.sunset.substring(3,5)))) ||
+        ((Number(weather.current.dt.substring(0,2)) * 60 +
+          Number(weather.current.dt.substring(3,5))) < (Number(weather.current.sunrise.substring(0,2)) * 60 + Number(weather.current.sunrise.substring(3,5)))))
+    }
   },
   template: `
     <div>
@@ -23,13 +33,11 @@ export default defineComponent({
 
     <div v-for="weather in weathers">
       <ul class="weather-list unstyled-list">
-        <li class="weather-card" :class="{'weather-card--night' : (((Number(weather.current.dt.substring(0,2)) * 60 +
-        Number(weather.current.dt.substring(3,5))) > (Number(weather.current.sunset.substring(0,2)) * 60 + Number(weather.current.sunset.substring(3,5)))) ||
-        ((Number(weather.current.dt.substring(0,2)) * 60 +
-          Number(weather.current.dt.substring(3,5))) < (Number(weather.current.sunrise.substring(0,2)) * 60 + Number(weather.current.sunrise.substring(3,5)))))}">
+        <li class="weather-card" :class="{'weather-card--night' : sunriseOrSunset(weather)}">
           <div v-if="weather.alert !== null" class="weather-alert">
             <span class="weather-alert__icon">⚠️</span>
-            <span class="weather-alert__description">{{weather.alert.sender_name}}: {{weather.alert.description}}</span>
+            <span class="weather-alert__description">{{ weather.alert.sender_name }}:
+              {{ weather.alert.description }}</span>
           </div>
           <div>
             <h2 class="weather-card__name">
@@ -70,7 +78,4 @@ export default defineComponent({
     </div>
     </div>
   `,
-  mounted() {
-  this.tempInfo()
-}
 })
